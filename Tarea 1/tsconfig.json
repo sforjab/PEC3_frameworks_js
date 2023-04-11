@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES6"
+    },
+    //"files": [],
+    "include": [
+        "*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
