@@ -1,0 +1,12 @@
+{
+  "compilerOptions": { /* Este bloque contiene las opciones de configuración del compilador de TypeScript. */
+    /* Basic Options */
+    "target": "es2015", /*  Especifica la versión de ECMAScript en la que se deben compilar los archivos TypeScript. En este caso, indica que se debe compilar a ECMAScript 2015 (ES6) */
+    "module": "commonjs", /* Define el sistema de módulos que se debe utilizar en la compilación. En este caso, se deben usar módulos CommonJS */
+    "outDir": "./dist", /* Indica la carpeta de salida para los archivos compilados */
+    "rootDir": "./src", /* Indica la carpeta raíz de los archivos de origen TypeScript */
+    "strict": true, /* Habilita todas las opciones de comprobación de tipos estrictas de TypeScript */
+    "incremental": true, /* Habilita la compilación incremental, la cual solamente compila los archivos TypeScript que han sido modificados desde la última compilación */
+    "tsBuildInfoFile": "./buildcache", /* Especifica la ubicación del archivo de información de compilación que se utiliza en la compilación incremental. */
+  }
+}
