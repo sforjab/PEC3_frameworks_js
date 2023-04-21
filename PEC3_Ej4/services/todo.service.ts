@@ -3,12 +3,16 @@
  *
  * Manages the data of the application.
  */
-class TodoService {
+import { Todo } from "../models/todo.model";
+
+export class TodoService {
   todos: Todo[];
-  onTodoListChanged: (todos: Todo[]) => void;
+  onTodoListChanged: (todos: Todo[]) => void = () => {};
+
   constructor() {
-    this.todos = (JSON.parse(localStorage.getItem("todos")) || []).map(
-      (todo: any) => new Todo(todo)
+    const todoLS: string | null = localStorage.getItem('todos');
+    this.todos = (todoLS ? JSON.parse(todoLS) : []).map(
+      (todo: Todo) => new Todo(todo)
     );
   }
 
@@ -27,7 +31,7 @@ class TodoService {
     this._commit(this.todos);
   }
 
-  editTodo(id: number, updatedText: string) {
+  editTodo(id: string, updatedText: string): void {
     this.todos = this.todos.map(todo =>
       todo.id === id
         ? new Todo({
@@ -40,13 +44,13 @@ class TodoService {
     this._commit(this.todos);
   }
 
-  deleteTodo(id: number): void {
+  deleteTodo(id: string): void {
     this.todos = this.todos.filter(todo => todo.id !== id);
 
     this._commit(this.todos);
   }
 
-  toggleTodo(id: number): void {
+  toggleTodo(id: string): void {
     this.todos = this.todos.map(todo =>
       todo.id === id ? new Todo({ ...todo, complete: !todo.complete }) : todo
     );

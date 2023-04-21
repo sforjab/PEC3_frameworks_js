@@ -3,8 +3,10 @@
  *
  * Visual representation of the model.
  */
-class TodoView {
-  app: HTMLElement;
+import { Todo } from "../models/todo.model";
+
+export class TodoView {
+  app: HTMLElement; // PRIVADAS????
   form: HTMLFormElement;
   input: HTMLInputElement;
   submitButton: HTMLButtonElement;
@@ -38,7 +40,7 @@ class TodoView {
     this.input.value = "";
   }
 
-  createElement(tag: string, className?: string):HTMLElement {
+  createElement(tag: keyof HTMLElementTagNameMap, className?: string):HTMLElement {
     const element = document.createElement(tag);
 
     if (className) element.classList.add(className);
@@ -74,15 +76,15 @@ class TodoView {
         checkbox.checked = todo.complete;
 
         const span = this.createElement("span") as HTMLSpanElement;
-        span.contentEditable = true;
+        span.contentEditable = 'true';
         span.classList.add("editable");
 
         if (todo.complete) {
           const strike = this.createElement("s") as HTMLSpanElement;
-          strike.textContent = todo.text;
+          strike.textContent = todo.text ?? null;
           span.append(strike);
         } else {
-          span.textContent = todo.text;
+          span.textContent = todo.text ?? null;
         }
 
         const deleteButton = this.createElement("button", "delete") as HTMLButtonElement;
@@ -100,7 +102,7 @@ class TodoView {
 
   _initLocalListeners(): void {
     this.todoList.addEventListener("input", event => {
-      if (event.target.className === "editable") {
+      if (event.target.className === "editable" && event.target instanceof HTMLElement) {
         this._temporaryTodoText = event.target.innerText;
       }
     });
@@ -117,7 +119,7 @@ class TodoView {
     });
   }
 
-  bindDeleteTodo(handler: (id: number) => void): void {
+  bindDeleteTodo(handler: (id: string) => void): void {
     this.todoList.addEventListener("click", (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.className === "delete") {
@@ -129,18 +131,21 @@ class TodoView {
     });
   }
 
-  bindEditTodo(handler: (id: number, text: string) => void) {
-    this.todoList.addEventListener("focusout", event => {
-      if (this._temporaryTodoText) {
-        const id = event.target.parentElement.id;
-
-        handler(id, this._temporaryTodoText);
-        this._temporaryTodoText = "";
+  bindEditTodo(handler: (id: string, text: string) => void) {
+    this.todoList.addEventListener("focusout", (event: FocusEvent) => {
+      const target = event.target as HTMLElement;
+      if (this._temporaryTodoText && target.classList.contains("editable")) {
+        const id = target.parentElement?.id;
+        if(id) {
+          handler(id, this._temporaryTodoText);
+          this._temporaryTodoText = "";
+        }
       }
     });
   }
 
-  bindToggleTodo(handler: (id: number) => void) {
+  // REVISAR
+  bindToggleTodo(handler: (id: string) => void) {
     this.todoList.addEventListener("change", (event: Event) => {
       const target = event.target as HTMLElement;
       if (target.type === "checkbox") {
