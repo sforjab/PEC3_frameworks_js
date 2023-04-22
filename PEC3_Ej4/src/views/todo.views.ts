@@ -3,7 +3,7 @@
  *
  * Visual representation of the model.
  */
-import { Todo } from "../models/todo.model";
+import { Todo } from '../models/todo.model';
 
 export class TodoView {
   app: HTMLElement; // PRIVADAS????
@@ -14,21 +14,21 @@ export class TodoView {
   todoList: HTMLUListElement;
   _temporaryTodoText: string;
   constructor() {
-    this.app = this.getElement("#root");
-    this.form = this.createElement("form") as HTMLFormElement;
-    this.input = this.createElement("input") as HTMLInputElement;
-    this.input.type = "text";
-    this.input.placeholder = "Add todo";
-    this.input.name = "todo";
-    this.submitButton = this.createElement("button") as HTMLButtonElement;
-    this.submitButton.textContent = "Submit";
+    this.app = this.getElement('#root');
+    this.form = this.createElement('form') as HTMLFormElement;
+    this.input = this.createElement('input') as HTMLInputElement;
+    this.input.type = 'text';
+    this.input.placeholder = 'Add todo';
+    this.input.name = 'todo';
+    this.submitButton = this.createElement('button') as HTMLButtonElement;
+    this.submitButton.textContent = 'Submit';
     this.form.append(this.input, this.submitButton);
-    this.title = this.createElement("h1") as HTMLHeadingElement;
-    this.title.textContent = "Todos";
-    this.todoList = this.createElement("ul", "todo-list") as HTMLUListElement;
+    this.title = this.createElement('h1') as HTMLHeadingElement;
+    this.title.textContent = 'Todos';
+    this.todoList = this.createElement('ul', 'todo-list') as HTMLUListElement;
     this.app.append(this.title, this.form, this.todoList);
 
-    this._temporaryTodoText = "";
+    this._temporaryTodoText = '';
     this._initLocalListeners();
   }
 
@@ -37,7 +37,7 @@ export class TodoView {
   }
 
   _resetInput(): void {
-    this.input.value = "";
+    this.input.value = '';
   }
 
   createElement(tag: keyof HTMLElementTagNameMap, className?: string):HTMLElement {
@@ -62,33 +62,33 @@ export class TodoView {
 
     // Show default message
     if (todos.length === 0) {
-      const p = this.createElement("p") as HTMLParagraphElement;
-      p.textContent = "Nothing to do! Add a task?";
+      const p = this.createElement('p') as HTMLParagraphElement;
+      p.textContent = 'Nothing to do! Add a task?';
       this.todoList.append(p);
     } else {
       // Create nodes
       todos.forEach(todo => {
-        const li = this.createElement("li") as HTMLLIElement;
+        const li = this.createElement('li') as HTMLLIElement;
         li.id = todo.id;
 
-        const checkbox = this.createElement("input") as HTMLInputElement;
-        checkbox.type = "checkbox";
+        const checkbox = this.createElement('input') as HTMLInputElement;
+        checkbox.type = 'checkbox';
         checkbox.checked = todo.complete;
 
-        const span = this.createElement("span") as HTMLSpanElement;
+        const span = this.createElement('span') as HTMLSpanElement;
         span.contentEditable = 'true';
-        span.classList.add("editable");
+        span.classList.add('editable');
 
         if (todo.complete) {
-          const strike = this.createElement("s") as HTMLSpanElement;
+          const strike = this.createElement('s') as HTMLSpanElement;
           strike.textContent = todo.text ?? null;
           span.append(strike);
         } else {
           span.textContent = todo.text ?? null;
         }
 
-        const deleteButton = this.createElement("button", "delete") as HTMLButtonElement;
-        deleteButton.textContent = "Delete";
+        const deleteButton = this.createElement('button', 'delete') as HTMLButtonElement;
+        deleteButton.textContent = 'Delete';
         li.append(checkbox, span, deleteButton);
 
         // Append nodes
@@ -101,15 +101,15 @@ export class TodoView {
   }
 
   _initLocalListeners(): void {
-    this.todoList.addEventListener("input", event => {
-      if (event.target.className === "editable" && event.target instanceof HTMLElement) {
+    this.todoList.addEventListener('input', event => {
+      if (event.target instanceof HTMLElement && event.target.className === 'editable') {
         this._temporaryTodoText = event.target.innerText;
       }
     });
   }
 
   bindAddTodo(handler: (text: string) => void): void {
-    this.form.addEventListener("submit", event => {
+    this.form.addEventListener('submit', event => {
       event.preventDefault();
 
       if (this._todoText) {
@@ -120,9 +120,9 @@ export class TodoView {
   }
 
   bindDeleteTodo(handler: (id: string) => void): void {
-    this.todoList.addEventListener("click", (event: MouseEvent) => {
+    this.todoList.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.className === "delete") {
+      if (target.className === 'delete') {
         const id = target.parentElement?.id;
         if(id) {
           handler(id);
@@ -132,13 +132,13 @@ export class TodoView {
   }
 
   bindEditTodo(handler: (id: string, text: string) => void) {
-    this.todoList.addEventListener("focusout", (event: FocusEvent) => {
+    this.todoList.addEventListener('focusout', (event: FocusEvent) => {
       const target = event.target as HTMLElement;
-      if (this._temporaryTodoText && target.classList.contains("editable")) {
+      if (this._temporaryTodoText && target.classList.contains('editable')) {
         const id = target.parentElement?.id;
         if(id) {
           handler(id, this._temporaryTodoText);
-          this._temporaryTodoText = "";
+          this._temporaryTodoText = '';
         }
       }
     });
@@ -146,10 +146,10 @@ export class TodoView {
 
   // REVISAR
   bindToggleTodo(handler: (id: string) => void) {
-    this.todoList.addEventListener("change", (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target.type === "checkbox") {
-        const id = target.parentElement.id;
+    this.todoList.addEventListener('change', (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.type === 'checkbox' && target.tagName === 'INPUT') {
+        const id = target.parentElement?.id;
 
         if(id) {
           handler(id);

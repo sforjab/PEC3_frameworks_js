@@ -8,7 +8,7 @@
  */
 import { Todo } from '../models/todo.model';
 import { TodoService } from '../services/todo.service';
-import { TodoView } from '../views/todo.view';
+import { TodoView } from '../views/todo.views';
 
 export class TodoController {
   service: TodoService;

@@ -3,7 +3,7 @@
  *
  * Manages the data of the application.
  */
-import { Todo } from "../models/todo.model";
+import { Todo } from '../models/todo.model';
 
 export class TodoService {
   todos: Todo[];
@@ -22,7 +22,7 @@ export class TodoService {
 
   _commit(todos: Todo[]): void {
     this.onTodoListChanged(todos);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem('todos', JSON.stringify(todos));
   }
 
   addTodo(text: string): void {
